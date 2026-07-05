@@ -14,7 +14,7 @@
     "test:e2e": "playwright test",
     "test:e2e:debug": "playwright test --debug",
     "test:all": "npm test && npm run test:e2e",
-    "db:up": "docker-compose up -d",
+    "db:up": "docker-compose -f docs/docker-compose.yml up -d",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
