@@ -76,7 +76,15 @@ export function SyllabusForm({
       return;
     }
 
-    router.push(cancelHref);
+    const redirectTarget =
+      typeof result.data === "object" &&
+      result.data !== null &&
+      "id" in result.data &&
+      typeof result.data.id === "string"
+        ? `/syllabi/${result.data.id}`
+        : cancelHref;
+
+    router.push(redirectTarget);
     router.refresh();
   }
 

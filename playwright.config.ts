@@ -42,5 +42,10 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    env: {
+      DATABASE_URL:
+        process.env.DATABASE_URL ??
+        "mysql://root:root@127.0.0.1:3306/syllabus_db",
+    },
   },
 });
