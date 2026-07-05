@@ -13,7 +13,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     const select = (
       <select
         ref={ref}
-        className={`rounded-[0.5rem] border border-outline-variant bg-surface px-3 py-2 text-base text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none ${className}`}
+        className={`rounded-[0.5rem] border border-outline-variant bg-surface px-3 py-2 text-base text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary/30 focus:outline-none transition-all duration-200 ${className}`}
         {...props}
       >
         {options.map((option) => (
@@ -35,9 +35,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <label className="flex flex-col gap-1">
-        <span className="text-sm font-semibold text-on-surface tracking-wide">
-          {label}
-        </span>
+        <span className="text-label-md text-on-surface">{label}</span>
         {select}
         {error && <span className="text-sm text-error">{error}</span>}
       </label>
