@@ -1,10 +1,11 @@
 # Local Environment Setup Guide
 
-This guide provides step-by-step instructions on how to initialize and run the Syllabus Management System locally using Next.js, MySQL (via Docker), and Drizzle ORM.
+This guide provides step-by-step instructions on how to initialize and run the Syllabus Management System locally using Next.js 16, MySQL (via Docker), Drizzle ORM, and Auth.js v5.
 
 ## Prerequisites
-- **Node.js** (v18+)
+- **Node.js** (v20.9+ — required by Next.js 16)
 - **Docker** and **Docker Compose** installed on your machine.
+- **Google OAuth credentials** (see Step 4b)
 
 ---
 
@@ -23,38 +24,76 @@ We use Docker Compose to spin up a local MySQL database. A `docker-compose.yml` 
 
 ---
 
-## Step 2: Initialize Next.js
+## Step 2: Initialize Next.js 16
 At the root of your project repository, run the following command to scaffold the Next.js frontend:
 
 ```bash
-npx create-next-app@latest .
+npx create-next-app@latest . --typescript --eslint --tailwind --src-dir --app-router --no-import-alias --use-npm
 ```
-*When prompted:*
-- Would you like to use TypeScript? **Yes**
-- Would you like to use ESLint? **Yes**
-- Would you like to use Tailwind CSS? **Yes**
-- Would you like to use `src/` directory? **Yes**
-- Would you like to use App Router? **Yes**
-- Would you like to customize the default import alias? **No**
+
+Next.js 16 defaults:
+- Turbopack is the default bundler (no webpack config needed)
+- ESLint uses Flat Config format
+- `proxy.ts` replaces the deprecated `middleware.ts` for route protection
+- React 19.2 is included
+- `params` and `searchParams` are async (must be `await`ed)
 
 ---
 
-## Step 3: Install Drizzle ORM
-Next, install the database ORM and MySQL driver:
+## Step 3: Install Dependencies
 
+### Database (Drizzle ORM + MySQL)
 ```bash
 npm install drizzle-orm mysql2
 npm install -D drizzle-kit tsx dotenv
 ```
 
+### Authentication (Auth.js v5)
+```bash
+npm install next-auth@beta @auth/drizzle-adapter
+```
+
+### Validation (Zod)
+```bash
+npm install zod
+```
+
+### Testing (Vitest + Playwright)
+```bash
+npm install -D vitest @playwright/test
+```
+
+### Development Utilities
+```bash
+npm install -D concurrently
+```
+
 ---
 
 ## Step 4: Environment Variables
-Create a `.env` file at the root of your project and add the database connection string:
+Create a `.env.local` file at the root of your project (never commit this file):
 
 ```env
+# Database
 DATABASE_URL="mysql://root:root@127.0.0.1:3306/syllabus_db"
+
+# Auth.js v5
+AUTH_SECRET="generate-with-openssl-rand-base64-32"
+AUTH_GOOGLE_ID="your-google-oauth-client-id"
+AUTH_GOOGLE_SECRET="your-google-oauth-client-secret"
+AUTH_TRUST_HOST=true
 ```
+
+> **Important:** Also create a `.env.example` file with the same keys but dummy values. This file IS committed to Git as a template.
+
+### Step 4b: Google OAuth Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project (or select existing)
+3. Enable Google+ API
+4. Go to **Credentials** → **Create Credentials** → **OAuth client ID**
+5. Set application type to **Web application**
+6. Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
+7. Copy the Client ID and Client Secret into your `.env.local`
 
 ---
 
@@ -75,15 +114,15 @@ export const db = drizzle(poolConnection, { schema, mode: "default" });
 ```
 
 **2. Create `src/db/schema.ts`**
-*(Refer to the `database_schema.md` document to build out your Drizzle tables here).*
+*(Refer to [`docs/database_schema.md`](./database_schema.md) to build out your Drizzle tables here.)*
+Use UUID primary keys (not serial/auto-increment) for all tables:
 ```typescript
-import { mysqlTable, varchar, serial } from "drizzle-orm/mysql-core";
+import { mysqlTable, varchar, text, datetime, mysqlEnum } from 'drizzle-orm/mysql-core';
+import { createId } from '@paralleldrive/cuid2';
 
-export const users = mysqlTable('users', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 256 }),
-  email: varchar('email', { length: 256 }),
-});
+// Auth.js tables (users, accounts, sessions, verificationTokens)
+// + Syllabus tables (syllabi, instructors, learning_objectives, etc.)
+// See docs/database_schema.md for full schema definition
 ```
 
 **3. Create `drizzle.config.ts` (at the root of the project)**
@@ -105,26 +144,26 @@ export default defineConfig({
 ---
 
 ## Step 6: The "Simple Command" to Run Everything
-To make development lightning fast, update your `package.json` to include unified commands. We will use the `concurrently` package to run Next.js and ensure Docker is up at the same time.
+To make development lightning fast, update your `package.json` to include unified commands:
 
-1. Install `concurrently`:
-   ```bash
-   npm install -D concurrently
-   ```
+```json
+"scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint",
+  "test": "vitest",
+  "test:e2e": "playwright test",
+  "db:up": "docker-compose up -d",
+  "db:generate": "drizzle-kit generate",
+  "db:migrate": "drizzle-kit migrate",
+  "db:studio": "drizzle-kit studio",
+  "dev:all": "concurrently \"npm run db:up\" \"npm run dev\""
+}
+```
 
-2. Update the `scripts` section in `package.json`:
-   ```json
-   "scripts": {
-     "dev": "next dev",
-     "build": "next build",
-     "start": "next start",
-     "lint": "next lint",
-     "db:up": "docker-compose up -d",
-     "db:push": "drizzle-kit push",
-     "db:studio": "drizzle-kit studio",
-     "dev:all": "concurrently \"npm run db:up\" \"npm run dev\""
-   }
-   ```
+> **Note:** Next.js 16 removed the `next lint` command. Use `eslint` directly instead.
+> **Note:** Use `db:generate` (not `db:push`) to create reviewable migration files.
 
 ## Daily Development Workflow
 From now on, whenever you want to work on the project, you only need to run **one command**:
@@ -132,4 +171,14 @@ From now on, whenever you want to work on the project, you only need to run **on
 ```bash
 npm run dev:all
 ```
-This will automatically ensure your MySQL database is running and start the Next.js development server on `localhost:3000`.
+This will automatically ensure your MySQL database is running and start the Next.js development server on `localhost:3000` (with Turbopack for fast refresh).
+
+### First-time setup (after cloning):
+```bash
+npm install
+cp .env.example .env.local  # Then fill in your real values
+npm run db:up
+npm run db:generate
+npm run db:migrate
+npm run dev
+```

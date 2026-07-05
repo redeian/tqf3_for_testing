@@ -59,30 +59,81 @@ The system must provide an interface to capture the following core sections of a
 - **Copy to Clipboard:** An option to copy the raw Markdown text directly to the user's clipboard.
 
 ## 5. Technology Stack & Database
-- **Backend / Frontend:** Next.js (App Router) / Node.js (TypeScript)
-- **Database:** MySQL
-- **ORM:** Drizzle ORM
+
+### 5.1 Core Stack
+- **Framework:** Next.js 16 (App Router, Turbopack default bundler)
+  - React 19.2
+  - Node.js 20.9+ (minimum required by Next.js 16)
+  - `output: "standalone"` enabled for Docker deployment
+  - `proxy.ts` (replaces deprecated `middleware.ts`) for auth route protection
+- **Language:** TypeScript (strict mode)
+- **Database:** MySQL 8.0 (Dockerized)
+- **ORM:** Drizzle ORM (type-safe, SQL-first, with migration files)
+- **Authentication:** Auth.js v5 (NextAuth) with Google OAuth provider
+  - Drizzle adapter for session/account storage in MySQL
+  - Protected routes via `proxy.ts`
+- **Validation:** Zod (runtime validation + type inference for all Server Action inputs)
+- **Styling:** Tailwind CSS v4 (custom design tokens from `docs/ui/DESIGN.md`)
+- **Icons:** Material Symbols Outlined
+
+### 5.2 Development & Testing
+- **Package Manager:** npm
+- **Dev Server:** `next dev` (Turbopack, 5–10x faster Fast Refresh)
+- **Unit Testing:** Vitest
+- **E2E Testing:** Playwright
+- **Linting:** ESLint (Flat Config, Next.js 16 default)
+- **Code Formatting:** Prettier
+
+### 5.3 CI/CD & Deployment
+- **CI/CD:** GitHub Actions (Free tier)
+  - **GitHub Free plan:** 2,000 build minutes/month for private repositories
+  - **Public repositories:** Unlimited free build minutes
+  - **Artifact storage:** 500 MB included on Free plan
+  - **Self-hosted runners:** Free (optional, for on-premise server deployment)
+  - Workflow: lint → type-check → unit tests → build → (deploy on merge to `main`)
+- **Deployment Target:** Docker container on a VPS (Hetzner/DigitalOcean)
+  - `Dockerfile` (multi-stage build, standalone output)
+  - `docker-compose.prod.yml` (Next.js app + MySQL)
+  - Reverse proxy: Caddy (automatic HTTPS)
+- **Database Migrations:** `drizzle-kit generate` (reviewable SQL files, applied via CI)
 
 ## 6. Initial Database Schema (Draft)
 The database schema has been modularized for better maintainability. 
 
-Please refer to the [Database Schema](file:///Users/chatchaiwangwiwattana/.gemini/antigravity-ide/brain/128e137e-aee1-4c1e-9d0d-ae5af9a7cb8d/database_schema.md) artifact for the complete Entity-Relationship (ER) diagram and table definitions.
+Please refer to [`docs/database_schema.md`](./database_schema.md) for the complete Entity-Relationship (ER) diagram and table definitions.
 
 ## 7. Non-Functional Requirements
 - **Usability:** The interface must be modern, minimal, and highly user-friendly.
 - **Performance:** Instantaneous live preview generation without lag.
 - **Responsiveness:** The app should be fully functional on desktop and usable on tablet devices.
+- **Scalability:** Must support up to 100 concurrent users comfortably. Single VPS deployment is sufficient.
+- **Security:**
+  - All routes protected via Auth.js + `proxy.ts` (Google OAuth)
+  - Input validation on all mutations via Zod schemas
+  - SQL injection prevention via Drizzle ORM parameterized queries
+  - CSRF protection handled by Auth.js for Server Actions
+  - HTTPS via Caddy reverse proxy (automatic Let's Encrypt certificates)
+  - Secrets managed via environment variables (never committed to Git)
+- **CI/CD:** Every push triggers GitHub Actions (lint → test → build). Merges to `main` trigger automated deployment.
+- **AI-Agent Friendly:** The architecture is designed for AI-agent-driven development:
+  - Strict TypeScript + Zod validation as safety nets
+  - Comprehensive test suite as feedback loop
+  - Reviewable database migrations (not auto-push)
+  - Branch protection requires passing CI before merge
 
 ## 8. Future Enhancements (Out of Scope for V1)
 - PDF and HTML export options.
-- User authentication and cloud storage for managing multiple syllabi.
+- Role-based access control (admin, faculty, viewer) beyond basic auth.
 - Collaborative editing for co-teachers.
 - AI-assisted syllabus generation or policy drafting.
 - Direct LMS (Canvas, Blackboard) integration.
+- Database backup automation (cron + managed storage).
 
-## 9. Open Questions / For User Review
+## 9. Architecture Decisions (Resolved)
 > [!IMPORTANT]
-> Please review the following questions to help refine the scope for V1:
-> 1. **Authentication:** Since we are using a MySQL database, should we include a full user authentication flow (e.g., NextAuth/Auth.js) so teachers can save multiple syllabi to their accounts?
-> 2. **Customization:** Do you want teachers to be able to add custom sections, or should the sections be strictly predefined?
-> 3. **Frontend Framework:** Are you okay with using Next.js (App Router) for the full stack to keep development simple and fast, or do you prefer a separate frontend and backend architecture?
+> The following questions have been resolved during architecture review:
+> 1. **Authentication:** ✅ Resolved — Auth.js v5 with Google OAuth will be implemented. Users authenticate via Google and can save multiple syllabi to their accounts. The `users`, `accounts`, and `sessions` tables are included in the database schema.
+> 2. **Customization:** Sections will be strictly predefined for V1 to ensure standardization. Custom sections are a future enhancement.
+> 3. **Frontend Framework:** ✅ Resolved — Next.js 16 (App Router) full-stack. Server Actions for mutations, Server Components for data fetching. No separate backend needed.
+> 4. **CI/CD:** ✅ Resolved — GitHub Actions (Free tier, 2,000 min/month for private repos). Sufficient for this project's build frequency.
+> 5. **Deployment:** ✅ Resolved — Docker container on VPS with Caddy reverse proxy for HTTPS.
