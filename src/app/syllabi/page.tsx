@@ -17,8 +17,8 @@ export default async function SyllabiPage() {
     <main className="mx-auto w-full max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-on-surface">Course Syllabi</h1>
-          <p className="mt-1 text-on-surface-variant">
+          <h1 className="text-headline-lg text-on-surface">Course Syllabi</h1>
+          <p className="mt-1 text-body-md text-on-surface-variant">
             Manage and export your TQF3 syllabi
           </p>
         </div>
