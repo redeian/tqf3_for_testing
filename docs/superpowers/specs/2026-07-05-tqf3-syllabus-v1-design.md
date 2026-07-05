@@ -70,8 +70,8 @@ Two tables only — no auth tables.
 | `id` | `uuid` | Primary key |
 | `course_code` | `varchar(20)` | e.g., "CS101" |
 | `course_name` | `varchar(200)` | e.g., "Introduction to Programming" |
-| `created_at` | `datetime` | Auto-set on insert |
-| `updated_at` | `datetime` | Auto-updated on modify |
+| `created_at` | `timestamp` | Auto-set on insert |
+| `updated_at` | `timestamp` | Auto-updated on modify |
 
 ### Table: `weekly_schedules`
 
