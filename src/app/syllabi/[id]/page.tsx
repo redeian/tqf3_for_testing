@@ -7,6 +7,7 @@ import {
   deleteSyllabus,
   exportSyllabus,
 } from "@/actions/syllabus";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { ViewSyllabus } from "@/components/features/view-syllabus";
 
 type PageProps = {
@@ -45,14 +46,16 @@ export default async function SyllabusDetailPage({ params }: PageProps) {
   };
 
   return (
-    <main className="mx-auto w-full max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-      <ViewSyllabus
-        syllabus={syllabus}
-        initialValues={initialValues}
-        onUpdate={updateSyllabus.bind(null, id)}
-        onDelete={deleteSyllabus.bind(null, id)}
-        onExport={exportSyllabus.bind(null, id)}
-      />
-    </main>
+    <DashboardShell>
+      <main className="mx-auto w-full max-w-[1280px] px-4 py-2 sm:px-6 lg:px-8">
+        <ViewSyllabus
+          syllabus={syllabus}
+          initialValues={initialValues}
+          onUpdate={updateSyllabus.bind(null, id)}
+          onDelete={deleteSyllabus.bind(null, id)}
+          onExport={exportSyllabus.bind(null, id)}
+        />
+      </main>
+    </DashboardShell>
   );
 }
