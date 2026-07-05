@@ -1,47 +1,58 @@
-/**
- * Test data factory for syllabus records.
- * Use these in both unit and E2E tests for consistent test data.
- */
-
-export function createSyllabusFixture(overrides?: Partial<{
-  id: string;
-  userId: string;
-  courseTitle: string;
-  courseCode: string;
-  term: string;
-  creditHours: number;
-  classLocation: string;
-  schedule: string;
-  courseDescription: string;
-  prerequisites: string;
-  status: "draft" | "incomplete" | "completed";
-}>) {
+export function createSyllabusFixture(
+  overrides?: Partial<{
+    id: string;
+    courseCode: string;
+    courseName: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }>
+) {
   return {
     id: "syllabus-test-id",
-    userId: "user-test-id",
-    courseTitle: "Web Programming",
-    courseCode: "IT601205",
-    term: "2567-1",
-    creditHours: 3,
-    classLocation: "Room 301, Building A",
-    schedule: "Mon/Wed 10:00-12:00",
-    courseDescription: "Introduction to web development with modern frameworks.",
-    prerequisites: "Basic programming knowledge",
-    status: "draft" as const,
+    courseCode: "CS101",
+    courseName: "Introduction to Programming",
+    createdAt: new Date("2026-07-05T00:00:00Z"),
+    updatedAt: new Date("2026-07-05T00:00:00Z"),
     ...overrides,
   };
 }
 
-export function createSyllabusInputFixture(overrides?: Record<string, unknown>) {
+export function createWeeklyScheduleFixture(
+  overrides?: Partial<{
+    id: string;
+    syllabusId: string;
+    weekNumber: number;
+    topic: string;
+    activityType: string;
+    sortOrder: number;
+  }>
+) {
   return {
-    courseTitle: "Web Programming",
-    courseCode: "IT601205",
-    term: "2567-1",
-    creditHours: 3,
-    classLocation: "Room 301",
-    schedule: "Mon/Wed 10:00-12:00",
-    courseDescription: "Introduction to web development.",
-    prerequisites: "Basic programming",
+    id: "weekly-test-id",
+    syllabusId: "syllabus-test-id",
+    weekNumber: 1,
+    topic: "Introduction to the course",
+    activityType: "Lecture",
+    sortOrder: 1,
+    ...overrides,
+  };
+}
+
+export function createSyllabusInputFixture(
+  overrides?: Partial<{
+    courseCode: string;
+    courseName: string;
+    weeks: { weekNumber: number; topic: string; activityType: string }[];
+  }>
+) {
+  return {
+    courseCode: "CS101",
+    courseName: "Introduction to Programming",
+    weeks: Array.from({ length: 15 }, (_, i) => ({
+      weekNumber: i + 1,
+      topic: i === 0 ? "Introduction" : "",
+      activityType: i === 0 ? "Lecture" : "",
+    })),
     ...overrides,
   };
 }
