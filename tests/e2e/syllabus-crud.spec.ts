@@ -43,7 +43,7 @@ test.describe("Syllabus CRUD", () => {
 
   test("edit an existing syllabus", async ({ page }) => {
     await page.goto("/syllabi");
-    await page.getByText(`${input.courseCode} - ${input.courseName}`).first().click();
+    await page.getByRole("link", { name: new RegExp(input.courseCode) }).first().click();
     await page.getByRole("button", { name: /edit/i }).click();
 
     const nameInput = page.getByLabel(/course name/i);
@@ -57,8 +57,8 @@ test.describe("Syllabus CRUD", () => {
   test("delete a syllabus", async ({ page }) => {
     await page.goto("/syllabi");
     const row = page
-      .getByRole("link", { name: new RegExp(`${input.courseCode} -`) })
-      .locator("xpath=../..");
+      .getByRole("row", { name: new RegExp(input.courseCode) })
+      .first();
     await row.getByRole("button", { name: /delete/i }).click();
     await page.getByRole("button", { name: /confirm delete/i }).click();
     await expect(page.getByText(input.courseCode)).not.toBeVisible();
