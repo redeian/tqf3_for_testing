@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ConfirmDelete } from "./confirm-delete";
+import { SyllabusTable } from "./syllabus-table";
 import { ActionResult } from "@/lib/types";
 
 type SyllabusSummary = {
@@ -19,8 +16,6 @@ type SyllabusListProps = {
 };
 
 export function SyllabusList({ syllabi, onDelete }: SyllabusListProps) {
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-
   if (syllabi.length === 0) {
     return (
       <div className="rounded-xl bg-surface p-8 text-center shadow-sm">
@@ -32,51 +27,5 @@ export function SyllabusList({ syllabi, onDelete }: SyllabusListProps) {
     );
   }
 
-  return (
-    <div className="flex flex-col gap-4">
-      {syllabi.map((syllabus) => (
-        <div
-          key={syllabus.id}
-          className="flex items-center justify-between rounded-xl bg-surface p-4 shadow-sm"
-        >
-          <div>
-            <Link
-              href={`/syllabi/${syllabus.id}`}
-              className="text-headline-sm text-primary hover:text-secondary hover:underline"
-            >
-              {syllabus.courseCode} - {syllabus.courseName}
-            </Link>
-            <p className="text-body-sm text-on-surface-variant">
-              Created {syllabus.createdAt.toLocaleDateString()}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Link href={`/syllabi/${syllabus.id}`}>
-              <Button variant="secondary" size="sm">
-                View
-              </Button>
-            </Link>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => setDeleteId(syllabus.id)}
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
-      ))}
-
-      <ConfirmDelete
-        isOpen={deleteId !== null}
-        onClose={() => setDeleteId(null)}
-        onConfirm={async () => {
-          if (deleteId) {
-            await onDelete(deleteId);
-            setDeleteId(null);
-          }
-        }}
-      />
-    </div>
-  );
+  return <SyllabusTable syllabi={syllabi} onDelete={onDelete} />;
 }
