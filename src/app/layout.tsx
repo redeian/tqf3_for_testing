@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Courier_Prime } from "next/font/google";
 import "./globals.css";
 
@@ -15,8 +15,13 @@ const courierPrime = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: "TQF3 Syllabus Manager",
-  description: "Create and export course syllabi for TQF3 / มคอ.3",
+  title: "CU Syllabus Manager - มคอ. 3",
+  description: "จัดการ มคอ. 3",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -26,10 +31,18 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="th"
       className={`${beVietnamPro.variable} ${courierPrime.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-full flex flex-col font-sans bg-surface text-on-surface">
+        {children}
+      </body>
     </html>
   );
 }
