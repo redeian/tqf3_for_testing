@@ -108,7 +108,7 @@ export function SyllabusForm({
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-semibold text-on-surface">Weekly Plan</h2>
+        <h2 className="text-headline-sm text-primary">Weekly Plan</h2>
         <div className="flex flex-col gap-4">
           {weeks.map((week, index) => (
             <div
@@ -116,7 +116,7 @@ export function SyllabusForm({
               className="grid grid-cols-12 gap-4 rounded-lg bg-surface p-4 shadow-sm"
             >
               <div className="col-span-12 md:col-span-1">
-                <span className="text-sm font-semibold text-on-surface-variant">
+                <span className="text-label-md text-on-surface-variant">
                   Week {week.weekNumber}
                 </span>
               </div>
