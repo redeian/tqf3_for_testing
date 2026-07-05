@@ -63,6 +63,21 @@ describe("createSyllabus", () => {
     }
   });
 
+  it("returns error for an invalid activity type", async () => {
+    const result = await createSyllabus({
+      ...validInput,
+      weeks: validInput.weeks.map((week) =>
+        week.weekNumber === 1
+          ? { ...week, activityType: "Invalid Type" }
+          : week
+      ),
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toContain("Invalid activity type");
+    }
+  });
+
   it("creates a syllabus with non-blank weeks", async () => {
     vi.mocked(db.transaction).mockResolvedValue({ id: "new-id" });
 

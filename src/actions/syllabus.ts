@@ -6,13 +6,29 @@ import { db } from "@/db";
 import { syllabi, weeklySchedules } from "@/db/schema";
 import { ActionResult } from "@/lib/types";
 import { generateMarkdown } from "@/lib/export";
-import { syllabusSchema, SyllabusInput } from "@/lib/validations";
+import {
+  ACTIVITY_TYPES,
+  syllabusSchema,
+  SyllabusInput,
+} from "@/lib/validations";
 import { logger } from "@/lib/logger";
+
+const VALID_ACTIVITY_TYPES = new Set(ACTIVITY_TYPES);
 
 function filterFilledWeeks(weeks: SyllabusInput["weeks"]) {
   return weeks.filter(
     (week) => week.topic?.trim() && week.activityType?.trim()
   );
+}
+
+function validateActivityTypes(weeks: SyllabusInput["weeks"]): string | null {
+  for (const week of weeks) {
+    const type = week.activityType?.trim();
+    if (type && !VALID_ACTIVITY_TYPES.has(type as (typeof ACTIVITY_TYPES)[number])) {
+      return `Invalid activity type: "${type}"`;
+    }
+  }
+  return null;
 }
 
 export async function createSyllabus(
@@ -21,6 +37,11 @@ export async function createSyllabus(
   const validated = syllabusSchema.safeParse(input);
   if (!validated.success) {
     return { success: false, error: validated.error.issues[0].message };
+  }
+
+  const typeError = validateActivityTypes(validated.data.weeks);
+  if (typeError) {
+    return { success: false, error: typeError };
   }
 
   try {
@@ -67,6 +88,11 @@ export async function updateSyllabus(
   const validated = syllabusSchema.safeParse(input);
   if (!validated.success) {
     return { success: false, error: validated.error.issues[0].message };
+  }
+
+  const typeError = validateActivityTypes(validated.data.weeks);
+  if (typeError) {
+    return { success: false, error: typeError };
   }
 
   try {

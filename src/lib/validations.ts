@@ -21,7 +21,7 @@ export const weeklyEntrySchema = z.object({
     .min(1, "Week number must be at least 1")
     .max(15, "Week number must be at most 15"),
   topic: z.string().max(500, "Topic cannot exceed 500 characters"),
-  activityType: z.string(),
+  activityType: z.string().max(50, "Activity type cannot exceed 50 characters"),
 });
 
 export type WeeklyEntryInput = z.infer<typeof weeklyEntrySchema>;
