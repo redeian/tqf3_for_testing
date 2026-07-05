@@ -38,6 +38,10 @@ export function ViewSyllabus({
   const [isPending, startTransition] = useTransition();
   const [exportError, setExportError] = useState<string | null>(null);
 
+  const filledWeeks = initialValues.weeks.filter(
+    (week) => week.topic?.trim() && week.activityType?.trim()
+  );
+
   async function handleExport() {
     setExportError(null);
     startTransition(async () => {
@@ -73,7 +77,7 @@ export function ViewSyllabus({
     return (
       <>
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-on-surface">Edit Syllabus</h1>
+          <h1 className="text-headline-lg text-on-surface">Edit Syllabus</h1>
           <Link href="/syllabi">
             <Button variant="secondary">Back to List</Button>
           </Link>
@@ -98,10 +102,10 @@ export function ViewSyllabus({
     <>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-on-surface">
+          <h1 className="text-headline-lg text-on-surface">
             {syllabus.courseCode} - {syllabus.courseName}
           </h1>
-          <p className="mt-1 text-sm text-on-surface-variant">
+          <p className="mt-1 text-body-sm text-on-surface-variant">
             Created {syllabus.createdAt.toLocaleDateString()} · Updated{" "}
             {syllabus.updatedAt.toLocaleDateString()}
           </p>
@@ -125,9 +129,46 @@ export function ViewSyllabus({
         </div>
       )}
 
-      <Link href="/syllabi" className="text-secondary hover:underline">
+      <Link
+        href="/syllabi"
+        className="text-secondary hover:text-secondary-fixed-variant hover:underline"
+      >
         ← Back to syllabi list
       </Link>
+
+      <div className="mt-8 rounded-[1rem] bg-surface p-6 shadow-sm">
+        <h2 className="text-headline-sm text-primary mb-4">Weekly Plan</h2>
+        {filledWeeks.length === 0 ? (
+          <p className="text-body-md text-on-surface-variant">
+            No weekly topics have been added yet.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {filledWeeks.map((week) => (
+              <div
+                key={week.weekNumber}
+                className="grid grid-cols-12 gap-4 rounded-lg bg-surface-container-low p-4 border border-outline-variant"
+              >
+                <div className="col-span-12 md:col-span-2">
+                  <span className="text-label-md text-on-surface-variant">
+                    Week {week.weekNumber}
+                  </span>
+                </div>
+                <div className="col-span-12 md:col-span-6">
+                  <span className="text-body-md text-on-surface font-semibold">
+                    {week.topic}
+                  </span>
+                </div>
+                <div className="col-span-12 md:col-span-4">
+                  <span className="inline-flex items-center rounded-full bg-secondary-container/30 px-3 py-1 text-label-md text-on-secondary-container">
+                    {week.activityType}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <ConfirmDelete
         isOpen={showDelete}

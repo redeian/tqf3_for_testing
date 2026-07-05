@@ -34,6 +34,11 @@ test.describe("Syllabus CRUD", () => {
     await page.getByRole("button", { name: /save syllabus/i }).click();
     await expect(page).toHaveURL(/\/syllabi\/[\w-]+/);
     await expect(page.getByText(input.courseCode)).toBeVisible();
+
+    // Weekly plan should be visible on the detail page
+    await expect(page.getByText("Weekly Plan")).toBeVisible();
+    await expect(page.getByText(input.weeks[0].topic)).toBeVisible();
+    await expect(page.getByText(input.weeks[0].activityType)).toBeVisible();
   });
 
   test("edit an existing syllabus", async ({ page }) => {
