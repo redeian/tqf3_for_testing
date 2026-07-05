@@ -38,7 +38,7 @@ test.describe("Syllabus CRUD", () => {
     // Weekly plan should be visible on the detail page
     await expect(page.getByText("Weekly Plan")).toBeVisible();
     await expect(page.getByText(input.weeks[0].topic)).toBeVisible();
-    await expect(page.getByText(input.weeks[0].activityType)).toBeVisible();
+    await expect(page.getByText(input.weeks[0].activityType).first()).toBeVisible();
   });
 
   test("edit an existing syllabus", async ({ page }) => {
