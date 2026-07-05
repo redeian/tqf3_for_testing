@@ -23,9 +23,9 @@ export function SyllabusList({ syllabi, onDelete }: SyllabusListProps) {
 
   if (syllabi.length === 0) {
     return (
-      <div className="rounded-lg bg-surface p-8 text-center shadow-sm">
-        <h3 className="text-lg font-semibold text-on-surface">No syllabi yet</h3>
-        <p className="mt-2 text-on-surface-variant">
+      <div className="rounded-xl bg-surface p-8 text-center shadow-sm">
+        <h3 className="text-headline-sm text-on-surface">No syllabi yet</h3>
+        <p className="mt-2 text-body-md text-on-surface-variant">
           Create your first syllabus to get started.
         </p>
       </div>
@@ -37,16 +37,16 @@ export function SyllabusList({ syllabi, onDelete }: SyllabusListProps) {
       {syllabi.map((syllabus) => (
         <div
           key={syllabus.id}
-          className="flex items-center justify-between rounded-lg bg-surface p-4 shadow-sm"
+          className="flex items-center justify-between rounded-xl bg-surface p-4 shadow-sm"
         >
           <div>
             <Link
               href={`/syllabi/${syllabus.id}`}
-              className="text-lg font-semibold text-primary hover:underline"
+              className="text-headline-sm text-primary hover:text-secondary hover:underline"
             >
               {syllabus.courseCode} - {syllabus.courseName}
             </Link>
-            <p className="text-sm text-on-surface-variant">
+            <p className="text-body-sm text-on-surface-variant">
               Created {syllabus.createdAt.toLocaleDateString()}
             </p>
           </div>
