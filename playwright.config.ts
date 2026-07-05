@@ -27,20 +27,11 @@ export default defineConfig({
   },
 
   projects: [
-    // --- Setup: authenticate once, save state ---
-    {
-      name: "setup",
-      testMatch: /.*\.setup\.ts/,
-    },
-
-    // --- Main tests: run after setup, reuse auth state ---
     {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
-        storageState: "playwright/.auth/user.json",
       },
-      dependencies: ["setup"],
     },
   ],
 

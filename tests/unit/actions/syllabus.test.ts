@@ -29,6 +29,8 @@ vi.mock("@/lib/logger", () => ({
   },
 }));
 
+import { syllabi } from "@/db/schema";
+
 import {
   createSyllabus,
   updateSyllabus,
@@ -147,7 +149,7 @@ describe("exportSyllabus", () => {
   });
 
   it("returns error when syllabus not found", async () => {
-    vi.mocked(db.query.syllabi.findFirst).mockResolvedValue(null);
+    vi.mocked(db.query.syllabi.findFirst).mockResolvedValue(undefined);
 
     const result = await exportSyllabus("missing-id");
     expect(result.success).toBe(false);
@@ -160,7 +162,7 @@ describe("exportSyllabus", () => {
       courseName: "Introduction to Programming",
       createdAt: new Date(),
       updatedAt: new Date(),
-    } as any);
+    } as unknown as typeof syllabi.$inferSelect);
     vi.mocked(db.query.weeklySchedules.findMany).mockResolvedValue([
       {
         id: "w1",
