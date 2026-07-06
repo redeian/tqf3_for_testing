@@ -35,6 +35,9 @@ export const syllabusSchema = z.object({
     .string()
     .min(1, "Course name is required")
     .max(200, "Course name cannot exceed 200 characters"),
+  level: z
+    .enum(["undergraduate", "graduate", "doctoral"])
+    .default("undergraduate"),
   weeks: z.array(weeklyEntrySchema).max(15, "Cannot exceed 15 weeks"),
 });
 

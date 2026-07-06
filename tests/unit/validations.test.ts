@@ -75,6 +75,56 @@ describe("weeklyEntrySchema", () => {
 });
 
 describe("syllabusSchema", () => {
+  it("accepts valid level values", () => {
+    const valid = syllabusSchema.parse({
+      courseCode: "CS101",
+      courseName: "Intro to CS",
+      level: "undergraduate",
+      weeks: [],
+    });
+    expect(valid.level).toBe("undergraduate");
+  });
+
+  it("accepts graduate level", () => {
+    const valid = syllabusSchema.parse({
+      courseCode: "CS501",
+      courseName: "Advanced CS",
+      level: "graduate",
+      weeks: [],
+    });
+    expect(valid.level).toBe("graduate");
+  });
+
+  it("accepts doctoral level", () => {
+    const valid = syllabusSchema.parse({
+      courseCode: "CS701",
+      courseName: "Doctoral Seminar",
+      level: "doctoral",
+      weeks: [],
+    });
+    expect(valid.level).toBe("doctoral");
+  });
+
+  it("rejects invalid level values", () => {
+    expect(() =>
+      syllabusSchema.parse({
+        courseCode: "CS101",
+        courseName: "Test",
+        level: "invalid",
+        weeks: [],
+      })
+    ).toThrow();
+  });
+
+  it("defaults to undergraduate when level is missing", () => {
+    const valid = syllabusSchema.parse({
+      courseCode: "CS101",
+      courseName: "Test",
+      weeks: [],
+    });
+    expect(valid.level).toBe("undergraduate");
+  });
+
   it("accepts valid syllabus data with all weeks", () => {
     const result = syllabusSchema.safeParse({
       courseCode: "CS101",
