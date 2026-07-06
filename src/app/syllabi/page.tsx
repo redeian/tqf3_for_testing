@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { count } from "drizzle-orm";
 import { db } from "@/db";
+import { syllabi } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { SyllabusList } from "@/components/features/syllabus-list";
 import { StatCard } from "@/components/ui/stat-card";
+import { LevelSummary } from "@/components/features/level-summary";
 import { DashboardTips } from "@/components/features/dashboard-tips";
 import { RecentHistory } from "@/components/features/recent-history";
 import { deleteSyllabus } from "@/actions/syllabus";
@@ -15,14 +18,28 @@ export const metadata = {
 };
 
 export default async function SyllabiPage() {
-  const syllabi = await db.query.syllabi.findMany({
+  const syllabusList = await db.query.syllabi.findMany({
     orderBy: (syllabi, { desc }) => [desc(syllabi.createdAt)],
   });
 
-  const mapped = syllabi.map((s) => ({
+  const mapped = syllabusList.map((s) => ({
     ...s,
     createdAt: new Date(s.createdAt),
   }));
+
+  const levelCounts = await db
+    .select({
+      level: syllabi.level,
+      count: count(),
+    })
+    .from(syllabi)
+    .groupBy(syllabi.level)
+    .then((rows) =>
+      rows.map((r) => ({
+        level: r.level as "undergraduate" | "graduate" | "doctoral",
+        count: r.count,
+      }))
+    );
 
   return (
     <DashboardShell>
@@ -89,6 +106,9 @@ export default async function SyllabiPage() {
           }
         />
       </div>
+
+      {/* Level Summary */}
+      <LevelSummary counts={levelCounts} />
 
       {/* Table */}
       <div className="mb-8">
