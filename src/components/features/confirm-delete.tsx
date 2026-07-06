@@ -29,7 +29,7 @@ export function ConfirmDelete({
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={onConfirm}>
+          <Button variant="danger" onClick={onConfirm} aria-label="Confirm Delete">
             Confirm Delete
           </Button>
         </div>

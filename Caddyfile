@@ -1,0 +1,25 @@
+{$DOMAIN} {
+    reverse_proxy app:3000
+
+    encode gzip zstd
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    }
+
+    # Security: deny access to hidden files
+    @hidden {
+        path *.env* .git* .DS_Store
+    }
+    respond @hidden 404
+
+    # Logs
+    log {
+        output file /data/logs/access.log
+        format json
+    }
+}

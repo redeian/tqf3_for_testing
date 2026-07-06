@@ -43,8 +43,10 @@ test.describe("Syllabus CRUD", () => {
 
   test("edit an existing syllabus", async ({ page }) => {
     await page.goto("/syllabi");
-    await page.getByRole("link", { name: new RegExp(input.courseCode) }).first().click();
-    await page.getByRole("button", { name: /edit/i }).click();
+    const row = page.getByRole("row", { name: new RegExp(input.courseCode) }).first();
+    await row.getByRole("link", { name: /edit/i }).click();
+
+    await expect(page.getByRole("heading", { name: /edit syllabus/i })).toBeVisible();
 
     const nameInput = page.getByLabel(/course name/i);
     await nameInput.clear();
@@ -60,7 +62,7 @@ test.describe("Syllabus CRUD", () => {
       .getByRole("row", { name: new RegExp(input.courseCode) })
       .first();
     await row.getByRole("button", { name: /delete/i }).click();
-    await page.getByRole("button", { name: /confirm delete/i }).click();
+    await page.getByRole("button", { name: /confirm delete/i, exact: false }).click();
     await expect(page.getByText(input.courseCode)).not.toBeVisible();
   });
 });

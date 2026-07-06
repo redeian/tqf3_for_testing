@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useTransition, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SyllabusForm } from "./syllabus-form";
@@ -33,10 +33,15 @@ export function ViewSyllabus({
   onExport,
 }: ViewSyllabusProps) {
   const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
+  const searchParams = useSearchParams();
+  const [isEditing, setIsEditing] = useState(searchParams.get("edit") === "1");
   const [showDelete, setShowDelete] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [exportError, setExportError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsEditing(searchParams.get("edit") === "1");
+  }, [searchParams]);
 
   const filledWeeks = initialValues.weeks.filter(
     (week) => week.topic?.trim() && week.activityType?.trim()

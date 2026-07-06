@@ -63,11 +63,12 @@ export function SyllabusTable({ syllabi, onDelete }: SyllabusTableProps) {
                   />
                 </td>
                 <td className="px-6 py-5 text-right">
-                  <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity md:opacity-0 group-hover:md:opacity-100">
                     <Link
                       href={`/syllabi/${syllabus.id}?edit=1`}
                       className="p-2 text-secondary hover:bg-secondary-container/30 rounded-lg transition-colors"
                       title="แก้ไข"
+                      aria-label="Edit"
                     >
                       <span className="material-symbols-outlined">edit</span>
                     </Link>
