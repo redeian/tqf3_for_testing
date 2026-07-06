@@ -7,7 +7,7 @@ const navItems = [
   { href: "/syllabi", label: "All Subjects", icon: "library_books" },
   { href: "/syllabi/new", label: "Create New Syllabus", icon: "add_box" },
   { href: "#", label: "Teaching Plans", icon: "calendar_today" },
-  { href: "#", label: "Reports", icon: "assessment" },
+  { href: "/reports", label: "Reports", icon: "assessment" },
 ];
 
 export function Sidebar() {
