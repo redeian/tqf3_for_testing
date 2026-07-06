@@ -43,6 +43,7 @@ import { revalidatePath } from "next/cache";
 const validInput = {
   courseCode: "CS101",
   courseName: "Introduction to Programming",
+  level: "undergraduate" as const,
   weeks: Array.from({ length: 15 }, (_, i) => ({
     weekNumber: i + 1,
     topic: i < 3 ? `Topic ${i + 1}` : "",

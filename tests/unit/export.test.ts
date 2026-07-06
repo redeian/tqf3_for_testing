@@ -6,6 +6,7 @@ describe("generateMarkdown", () => {
     id: "test-id",
     courseCode: "CS101",
     courseName: "Introduction to Programming",
+    level: "undergraduate",
     createdAt: new Date(),
     updatedAt: new Date(),
   };

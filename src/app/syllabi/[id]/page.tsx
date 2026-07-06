@@ -44,6 +44,7 @@ export default async function SyllabusDetailPage({ params }: PageProps) {
   const initialValues = {
     courseCode: syllabus.courseCode,
     courseName: syllabus.courseName,
+    level: syllabus.level as "undergraduate" | "graduate" | "doctoral",
     weeks,
   };
 

@@ -42,6 +42,9 @@ export function SyllabusForm({
   const [courseName, setCourseName] = useState(
     initialValues?.courseName ?? ""
   );
+  const [level, setLevel] = useState<string>(
+    initialValues?.level ?? "undergraduate"
+  );
   const [weeks, setWeeks] = useState<SyllabusInput["weeks"]>(
     initialValues?.weeks ?? DEFAULT_WEEKS
   );
@@ -66,6 +69,7 @@ export function SyllabusForm({
     const result = await onSubmit({
       courseCode,
       courseName,
+      level: level as "undergraduate" | "graduate" | "doctoral",
       weeks,
     });
 
@@ -105,6 +109,23 @@ export function SyllabusForm({
           placeholder="e.g., Introduction to Programming"
           required
         />
+      </div>
+
+      {/* Level Select */}
+      <div className="space-y-2">
+        <label htmlFor="level" className="text-label-md text-on-surface">
+          ระดับการศึกษา
+        </label>
+        <select
+          id="level"
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+          className="w-full px-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-body-md focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all"
+        >
+          <option value="undergraduate">ปริญญาตรี</option>
+          <option value="graduate">ปริญญาโท</option>
+          <option value="doctoral">ปริญญาเอก</option>
+        </select>
       </div>
 
       <div className="flex flex-col gap-4">
