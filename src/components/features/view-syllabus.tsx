@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -34,14 +34,10 @@ export function ViewSyllabus({
 }: ViewSyllabusProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isEditing, setIsEditing] = useState(searchParams.get("edit") === "1");
+  const isEditing = searchParams.get("edit") === "1";
   const [showDelete, setShowDelete] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [exportError, setExportError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setIsEditing(searchParams.get("edit") === "1");
-  }, [searchParams]);
 
   const filledWeeks = initialValues.weeks.filter(
     (week) => week.topic?.trim() && week.activityType?.trim()
@@ -92,7 +88,7 @@ export function ViewSyllabus({
           onSubmit={async (input) => {
             const result = await onUpdate(input);
             if (result.success) {
-              setIsEditing(false);
+              router.replace(`/syllabi/${syllabus.id}`);
             }
             return result;
           }}
@@ -116,7 +112,7 @@ export function ViewSyllabus({
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setIsEditing(true)}>
+          <Button variant="secondary" onClick={() => router.push(`/syllabi/${syllabus.id}?edit=1`)}>
             Edit
           </Button>
           <Button onClick={handleExport} disabled={isPending}>
