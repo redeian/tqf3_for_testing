@@ -32,6 +32,7 @@ This boilerplate has three independent stages. Each has its own documents:
 | **UI Screenshot** | [`docs/ui/screen.png`](./ui/screen.png) | Visual reference of the target UI | When building UI pages |
 | **Docker Compose (dev)** | [`docs/docker-compose.yml`](./docker-compose.yml) | Development MySQL container config | Before running local database |
 | **Superpowers Integration** | [`docs/superpowers/README.md`](./superpowers/README.md) | How Superpowers skills integrate with our dev process, plan/execution/verification recording | Before starting any implementation |
+| **How-To Guide** | [`docs/HOW_TO.md`](./HOW_TO.md) | Practical workflow guide — when to use Superpowers vs. direct edit, branch strategy, decision matrix | Before starting any task |
 
 ## Project Structure Overview
 
