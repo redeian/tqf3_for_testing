@@ -8,6 +8,8 @@ import { DashboardTips } from "@/components/features/dashboard-tips";
 import { RecentHistory } from "@/components/features/recent-history";
 import { deleteSyllabus } from "@/actions/syllabus";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "จัดการ มคอ. 3 | CU Syllabus Manager",
 };

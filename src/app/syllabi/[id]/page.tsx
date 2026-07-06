@@ -10,6 +10,8 @@ import {
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { ViewSyllabus } from "@/components/features/view-syllabus";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   params: Promise<{ id: string }>;
 };
