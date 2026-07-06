@@ -13,7 +13,7 @@ export function TopNavbar() {
     <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-surface border-b border-outline-variant shadow-sm">
       <div className="flex items-center gap-8">
         <Link href="/" className="text-headline-md font-bold text-primary">
-          CU Syllabus Manager
+          UTCC TQF3 Manager
         </Link>
         <div className="hidden md:flex gap-6 text-body-md">
           {topLinks.map((link) => (

@@ -15,7 +15,7 @@ const courierPrime = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: "CU Syllabus Manager - มคอ. 3",
+  title: "UTCC TQF3 Manager - มคอ. 3",
   description: "จัดการ มคอ. 3",
 };
 

@@ -3,7 +3,7 @@ import { SyllabusForm } from "@/components/features/syllabus-form";
 import { createSyllabus } from "@/actions/syllabus";
 
 export const metadata = {
-  title: "Create Syllabus | CU Syllabus Manager",
+  title: "Create Syllabus | UTCC TQF3 Manager",
 };
 
 export default function NewSyllabusPage() {
