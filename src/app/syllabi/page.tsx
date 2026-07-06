@@ -11,7 +11,7 @@ import { deleteSyllabus } from "@/actions/syllabus";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "จัดการ มคอ. 3 | CU Syllabus Manager",
+  title: "จัดการ มคอ. 3 | UTCC TQF3 Manager",
 };
 
 export default async function SyllabiPage() {

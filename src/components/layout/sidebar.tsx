@@ -23,11 +23,11 @@ export function Sidebar() {
             </span>
           </div>
           <span className="text-headline-sm font-bold text-primary">
-            Thai University
+            UTCC
           </span>
         </div>
         <p className="text-on-surface-variant text-label-md opacity-70">
-          Academic Portal
+          TQF3 Manager
         </p>
       </div>
 
