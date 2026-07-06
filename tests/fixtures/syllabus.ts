@@ -42,12 +42,14 @@ export function createSyllabusInputFixture(
   overrides?: Partial<{
     courseCode: string;
     courseName: string;
+    level: "undergraduate" | "graduate" | "doctoral";
     weeks: { weekNumber: number; topic: string; activityType: string }[];
   }>
 ) {
   return {
     courseCode: "CS101",
     courseName: "Introduction to Programming",
+    level: "undergraduate",
     weeks: Array.from({ length: 15 }, (_, i) => ({
       weekNumber: i + 1,
       topic: i === 0 ? "Introduction" : "",

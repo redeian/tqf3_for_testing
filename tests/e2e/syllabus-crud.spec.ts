@@ -65,4 +65,10 @@ test.describe("Syllabus CRUD", () => {
     await page.getByRole("button", { name: /confirm delete/i, exact: false }).click();
     await expect(page.getByText(input.courseCode)).not.toBeVisible();
   });
+
+  test("shows level summary on dashboard", async ({ page }) => {
+    await page.goto("/syllabi");
+    await expect(page.getByText("ภาพรวมหลักสูตรแยกตามระดับ")).toBeVisible();
+    await expect(page.getByText("ปริญญาตรี")).toBeVisible();
+  });
 });
