@@ -51,6 +51,7 @@ export async function createSyllabus(
         .values({
           courseCode: validated.data.courseCode,
           courseName: validated.data.courseName,
+          level: validated.data.level,
         })
         .$returningId();
 
@@ -110,6 +111,7 @@ export async function updateSyllabus(
         .set({
           courseCode: validated.data.courseCode,
           courseName: validated.data.courseName,
+          level: validated.data.level,
         })
         .where(eq(syllabi.id, id));
 
