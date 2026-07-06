@@ -1,13 +1,31 @@
-version: "3.8"
+# =============================================================================
+# Docker Compose — Production Stack
+# =============================================================================
+# Three services: app (Next.js) + db (MySQL) + caddy (HTTPS reverse proxy)
+#
+# USAGE:
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+#
+# PORT MODES:
+#   Without a domain (testing):
+#     - App port: "80:3000"         → visit http://server-ip
+#     - Stop Caddy: it needs a domain for HTTPS
+#
+#   With a domain (production):
+#     - App port: "127.0.0.1:3000:3000"  → not publicly exposed
+#     - Caddy handles ports 80/443       → visit https://yourdomain.com
+# =============================================================================
 
 services:
+  # --- Next.js App ---
   app:
     build: .
     restart: always
+    # Change to "127.0.0.1:3000:3000" when using Caddy with a domain
     ports:
-      - "127.0.0.1:3000:3000"
+      - "80:3000"
     environment:
-      - DATABASE_URL=mysql://appuser:${DB_PASSWORD}@db:3306/syllabus_db
+      - DATABASE_URL=mysql://appuser:${DB_PASSWORD}@db:3306/${DB_NAME:-syllabus_db}
       - NODE_ENV=production
     depends_on:
       db:
@@ -15,12 +33,13 @@ services:
     networks:
       - internal
 
+  # --- MySQL Database ---
   db:
     image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: syllabus_db
+      MYSQL_DATABASE: ${DB_NAME:-syllabus_db}
       MYSQL_USER: appuser
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
@@ -33,6 +52,7 @@ services:
     networks:
       - internal
 
+  # --- Caddy Reverse Proxy (optional without a domain) ---
   caddy:
     image: caddy:2-alpine
     restart: always

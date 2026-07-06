@@ -1,3 +1,16 @@
+# =============================================================================
+# GitHub Actions — CI (Continuous Integration)
+# =============================================================================
+# Runs on every push and PR to main:
+#   1. Lint          — ESLint
+#   2. Type check    — TypeScript (tsc --noEmit)
+#   3. Unit tests    — Vitest
+#   4. Build         — Next.js production build
+#
+# CUSTOMIZE FOR YOUR PROJECT:
+#   - Change DB_NAME if your database has a different name
+# =============================================================================
+
 name: CI
 
 on:
@@ -10,6 +23,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DB_NAME: syllabus_db              # 👈 Change to your database name
+
 jobs:
   quality:
     name: Quality Checks
@@ -20,7 +36,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: syllabus_db
+          MYSQL_DATABASE: ${{ env.DB_NAME }}
         ports:
           - 3306:3306
         options: >-
@@ -51,9 +67,9 @@ jobs:
       - name: Unit tests
         run: npm test
         env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/syllabus_db
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/${{ env.DB_NAME }}
 
       - name: Build
         run: npm run build
         env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/syllabus_db
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/${{ env.DB_NAME }}
