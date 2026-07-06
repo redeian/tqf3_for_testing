@@ -1,0 +1,1 @@
+ALTER TABLE `syllabi` ADD `level` varchar(20) DEFAULT 'undergraduate' NOT NULL;

@@ -7,6 +7,7 @@ export const syllabi = mysqlTable("syllabi", {
     .$defaultFn(() => crypto.randomUUID()),
   courseCode: varchar("course_code", { length: 20 }).notNull(),
   courseName: varchar("course_name", { length: 200 }).notNull(),
+  level: varchar("level", { length: 20 }).notNull().default("undergraduate"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
